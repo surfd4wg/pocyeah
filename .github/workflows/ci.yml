@@ -1,0 +1,55 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  test:
+    name: test & record (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install ffmpeg + fonts (Linux)
+        if: runner.os == 'Linux'
+        run: sudo apt-get update && sudo apt-get install -y ffmpeg fonts-dejavu-core
+
+      - name: Install ffmpeg (Windows)
+        if: runner.os == 'Windows'
+        run: choco install ffmpeg -y --no-progress
+
+      - name: Sync (with recorder extra)
+        run: uv sync --extra record
+
+      - name: Run tests
+        run: uv run pytest -q
+
+      - name: Smoke — validate & dryrun
+        run: |
+          uv run pocyeah validate examples/ci-smoke/demo.toml
+          uv run pocyeah dryrun   examples/ci-smoke/demo.toml
+
+      - name: Smoke — record --split
+        run: uv run pocyeah record examples/ci-smoke/demo.toml --split
+
+      - name: Upload recordings
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pocyeah-recordings-${{ matrix.os }}
+          path: |
+            examples/ci-smoke/*.mov
+            examples/ci-smoke/*-board.html
+          if-no-files-found: ignore
