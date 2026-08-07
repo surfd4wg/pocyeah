@@ -1,0 +1,20 @@
+# Minimal cross-platform smoke demo used by CI. Its pane command ("echo …")
+# runs identically under /bin/sh (POSIX) and cmd.exe (Windows), so `validate`,
+# `dryrun`, and `record --split` all exercise the real pipeline on every OS
+# without needing sh, python, or any tool the runner might lack.
+[recording]
+fps = 8
+cols = 40
+rows = 6
+hold = 0.4
+
+[layout]
+mode = "rows"
+
+[[pane]]
+title = "SMOKE A"
+cmd = "echo hello from pocyeah CI"
+
+[[pane]]
+title = "SMOKE B"
+cmd = "echo second pane"
