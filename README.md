@@ -1,5 +1,4 @@
 <p align="center">
-  <img src="docs/pocyeah_logo.png" alt="PocYeah" width="640">
 </p>
 
 # PocYeah
