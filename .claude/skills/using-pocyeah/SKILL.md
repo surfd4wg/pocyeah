@@ -1,13 +1,13 @@
 ---
 name: using-pocyeah
-description: Use when recording, captioning, or narrating a proof-of-concept demo with this repo's pocyeah / pocu CLI — authoring or running a demo.toml, producing a screen-recording .mov take, or adding burned-in subtitles or spoken narration to a take.
+description: Use when recording, captioning, or narrating a proof-of-concept demo with this repo's pocyeah / pocyeah CLI — authoring or running a demo.toml, producing a screen-recording .mov take, or adding burned-in subtitles or spoken narration to a take.
 ---
 
 # Using PocYeah
 
-Spec-driven CLI (`pocu`, alias of `pocyeah`) that turns one `demo.toml` into a
-narrated, multi-terminal screen-recording. Run everything with `uv run pocu …`
-from the repo (or a global `pocu` if installed).
+Spec-driven CLI (`pocyeah`) that turns one `demo.toml` into a
+narrated, multi-terminal screen-recording. Run everything with `uv run pocyeah …`
+from the repo (or a global `pocyeah` if installed).
 
 **Core model:** a cheap headless inner loop (`validate`, `dryrun`) you iterate on,
 then **one** expensive render step (`record`), then re-runnable post-production
@@ -19,11 +19,11 @@ command in a real pseudo-terminal, renders the terminals to video frames itself,
 and pipes them to ffmpeg. No Terminal.app, no screen-recording permission, no
 display server — it works headless, including in CI.
 
-## First move: `pocu explain`
+## First move: `pocyeah explain`
 
-Run `uv run pocu explain` for the authoritative, always-current `demo.toml` schema.
+Run `uv run pocyeah explain` for the authoritative, always-current `demo.toml` schema.
 **Do not guess TOML fields and do not read the source to answer schema or usage
-questions** — `explain` and this skill are the reference. `pocu scaffold <dir>`
+questions** — `explain` and this skill are the reference. `pocyeah scaffold <dir>`
 writes a working starter demo (create-only; never overwrites).
 
 ## The pipeline
@@ -46,7 +46,7 @@ frames.
 **You cannot meaningfully annotate/narrate a video `record` didn't produce**
 (e.g. a QuickTime capture). No sidecar → both commands hard-error. Hand-authoring
 a sidecar is possible but fragile and off the intended path; the right move is to
-re-record with `pocu record` so events and offsets are real.
+re-record with `pocyeah record` so events and offsets are real.
 
 Re-wording is cheap: edit `[[annotation]]` text and re-run `annotate`/`narrate`
 against the **same** take — no re-record needed.
@@ -70,13 +70,13 @@ Do NOT jump straight to `record`. The loop is:
 matters**:
 
 ```bash
-uv run pocu record <spec>                         # -> <stamp>.mov + <stamp>.mov.timeline.json
+uv run pocyeah record <spec>                         # -> <stamp>.mov + <stamp>.mov.timeline.json
 # record's output is timestamped and the dir fills with derived files, so grab the
 # fresh raw take by name, excluding derived ones, right after recording:
 TAKE=$(ls -t <demo-dir>/*-*.mov | grep -Ev '(captioned|narrated)' | head -1)
-uv run pocu annotate <spec> "$TAKE"               # -> $TAKE-captioned.mov  (captions in pixels)
+uv run pocyeah annotate <spec> "$TAKE"               # -> $TAKE-captioned.mov  (captions in pixels)
 cp "$TAKE.timeline.json" "${TAKE%.mov}-captioned.mov.timeline.json"  # narrate needs a sidecar beside ITS input
-uv run pocu narrate <spec> "${TAKE%.mov}-captioned.mov"   # -> ...-captioned-narrated.mov
+uv run pocyeah narrate <spec> "${TAKE%.mov}-captioned.mov"   # -> ...-captioned-narrated.mov
 ```
 
 Annotate **first**: narrate copies the video stream (`-c:v copy`), so burned-in
@@ -92,7 +92,7 @@ sidecar, so you must copy the original's next to the `-captioned.mov` (step 3).
 - **`narrate`**: `ffmpeg` + `ffprobe`. Uses ElevenLabs when a key is present
   (`$ELEVENLABS_API_KEY`, or a `.env` beside the spec), else falls back to the
   cross-platform on-device engine, Piper (`pocyeah[tts-local]`). Pass
-  `uv run --extra tts pocu narrate …` to keep the cloud backend available under `uv run`.
+  `uv run --extra tts pocyeah narrate …` to keep the cloud backend available under `uv run`.
   Piper downloads its default voice once to a per-user cache on first use; set
   `$POCYEAH_PIPER_MODEL` to a local `.onnx` model to synthesize fully offline.
 - **Env-key quirk:** a key exported only in a shell profile (`~/.zshrc`,
@@ -104,7 +104,7 @@ sidecar, so you must copy the original's next to the `-captioned.mov` (step 3).
 
 | Mistake | Reality |
 |---|---|
-| Reading `src/` to answer a usage/schema question | Run `pocu explain`; use this skill. Source-diving is wasted work. |
+| Reading `src/` to answer a usage/schema question | Run `pocyeah explain`; use this skill. Source-diving is wasted work. |
 | `validate → record`, skipping `dryrun` | `dryrun` proves the PoC works headlessly and free. Iterate there first. |
 | `annotate`/`narrate` on a hand-recorded `.mov` | No `<mov>.timeline.json` → hard error. Only `record` produces a real one. |
 | Narrate first, then annotate | Annotate re-encodes video and won't reliably keep the narration. Annotate → narrate. |

@@ -21,7 +21,6 @@ tts-local = ["piper-tts>=1.2"]   # cross-platform on-device fallback (Linux/Wind
 
 [project.scripts]
 pocyeah = "pocyeah.cli:main"
-pocu = "pocyeah.cli:main"
 
 [build-system]
 requires = ["hatchling"]

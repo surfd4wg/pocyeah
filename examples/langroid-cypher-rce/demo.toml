@@ -11,12 +11,12 @@
 # stdlib stand-in (no network egress, no API key). See README.md.
 #
 # Cheap loop (headless — proves the RCE end to end, fails unless calc pops):
-#   uv run pocu dryrun   examples/langroid-cypher-rce/demo.toml
+#   uv run pocyeah dryrun   examples/langroid-cypher-rce/demo.toml
 # Expensive take (macOS on-screen recording + timeline sidecar):
-#   uv run pocu record   examples/langroid-cypher-rce/demo.toml
+#   uv run pocyeah record   examples/langroid-cypher-rce/demo.toml
 # Burn the caption track / speak it:
-#   uv run pocu annotate examples/langroid-cypher-rce/demo.toml <recording>.mov
-#   uv run pocu narrate  examples/langroid-cypher-rce/demo.toml <recording>.mov
+#   uv run pocyeah annotate examples/langroid-cypher-rce/demo.toml <recording>.mov
+#   uv run pocyeah narrate  examples/langroid-cypher-rce/demo.toml <recording>.mov
 #
 # Runs on plain `python3` (stdlib only). Authorized security research;
 # educational reproduction / demonstration only.

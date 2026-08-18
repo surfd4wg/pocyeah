@@ -79,27 +79,27 @@ Runs on plain `python3` (standard library only) — no virtualenv or extra deps.
 
 ```bash
 # 1. Schema check (pure, no screen).
-uv run pocu validate examples/langroid-cypher-rce/demo.toml
+uv run pocyeah validate examples/langroid-cypher-rce/demo.toml
 
 # 2. Headless proof — runs all three roles, gated, and FAILS unless the RCE
 #    actually lands (verify expects the `rce` signal, which the backend writes
 #    only after it spawns the OS command). NOTE: this launches Calculator.
-uv run pocu dryrun examples/langroid-cypher-rce/demo.toml
+uv run pocyeah dryrun examples/langroid-cypher-rce/demo.toml
 
 # 3. The take (runs all three roles in PTYs and renders them to video; any OS).
 #    Writes langroid-cypher-rce-<stamp>.mov and a .mov.timeline.json sidecar.
-uv run --extra record pocu record examples/langroid-cypher-rce/demo.toml
+uv run --extra record pocyeah record examples/langroid-cypher-rce/demo.toml
 
 # 4. Burn the caption track onto the take (re-runnable; edit captions and
 #    re-run without another recording).
-uv run pocu annotate examples/langroid-cypher-rce/demo.toml \
+uv run pocyeah annotate examples/langroid-cypher-rce/demo.toml \
   examples/langroid-cypher-rce/langroid-cypher-rce-<stamp>.mov
 #   -> langroid-cypher-rce-<stamp>-captioned.mov
 
 # 5. (optional) Speak the captions instead. Needs ElevenLabs
 #    (uv pip install 'pocyeah[tts]' + an API key) or the on-device fallback
 #    (uv pip install 'pocyeah[tts-local]').
-uv run pocu narrate examples/langroid-cypher-rce/demo.toml \
+uv run pocyeah narrate examples/langroid-cypher-rce/demo.toml \
   examples/langroid-cypher-rce/langroid-cypher-rce-<stamp>.mov
 #   -> langroid-cypher-rce-<stamp>-narrated.mov
 ```

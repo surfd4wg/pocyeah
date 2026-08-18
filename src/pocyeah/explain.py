@@ -14,7 +14,7 @@ A demo.toml describes a multi-pane terminal demo. Build one with this loop:
   pocyeah record   my-demo/demo.toml   # the full take -> recording.mov (any OS)
   pocyeah annotate my-demo/demo.toml recording.mov  # burn [[annotation]] captions onto a take
   pocyeah narrate  my-demo/demo.toml recording.mov  # speak [[annotation]] lines, mix onto a take
-  (pocu is a shorter alias for pocyeah — e.g. `pocu record ...`)
+
 
 Paths in a pane's `cmd`/`cwd` are resolved against the demo.toml's own
 directory, so a demo runs the same from anywhere.

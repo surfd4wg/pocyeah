@@ -26,17 +26,17 @@ display server, no Terminal.app — so it even works in CI.
 > pipeline, and the pure/effect architecture are preserved. MIT-licensed, like the
 > original.
 
-The command is `pocyeah` (or the short alias **`pocu`**).
+The command is `pocyeah`.
 
 ```bash
-pocu scaffold my-demo/                       # write a working starter demo.toml
-pocu validate my-demo/demo.toml              # pure schema check, no screen
-pocu dryrun   my-demo/demo.toml              # run the roles headless, assert success
-pocu layout   my-demo/demo.toml              # render a still PNG preview of the tiling
-pocu record   my-demo/demo.toml              # the take -> recording.mov (+ timeline)
-pocu annotate my-demo/demo.toml recording.mov # burn [[annotation]] captions + [[overlay]] GIFs -> -captioned.mov
-pocu narrate  my-demo/demo.toml recording.mov # speak the captions instead -> -narrated.mov
-pocu explain                                 # print the full demo.toml schema reference
+pocyeah scaffold my-demo/                       # write a working starter demo.toml
+pocyeah validate my-demo/demo.toml              # pure schema check, no screen
+pocyeah dryrun   my-demo/demo.toml              # run the roles headless, assert success
+pocyeah layout   my-demo/demo.toml              # render a still PNG preview of the tiling
+pocyeah record   my-demo/demo.toml              # the take -> recording.mov (+ timeline)
+pocyeah annotate my-demo/demo.toml recording.mov # burn [[annotation]] captions + [[overlay]] GIFs -> -captioned.mov
+pocyeah narrate  my-demo/demo.toml recording.mov # speak the captions instead -> -narrated.mov
+pocyeah explain                                 # print the full demo.toml schema reference
 ```
 ## Worked example
 
@@ -76,7 +76,7 @@ cross-platform stack, and `ffmpeg` is always shelled out.
 
 ```bash
 git clone <this-repo> && cd pocyeah
-uv run pocu --help          # uv resolves the project and both entry points
+uv run pocyeah --help          # uv resolves the project
 
 # Recording (`record`, `layout`) needs ffmpeg plus the recorder extra
 # (pyte + Pillow, and pywinpty on Windows). Install ffmpeg for your OS:
@@ -107,7 +107,7 @@ key is found it falls back to the on-device engine automatically** (install
 `pocyeah[tts-local]` for that path).
 
 ```bash
-# Global (every `pocu narrate`, anywhere) — add to your shell profile:
+# Global (every `pocyeah narrate`, anywhere) — add to your shell profile:
 #   Linux/macOS (bash/zsh):  echo 'export ELEVENLABS_API_KEY=sk_...' >> ~/.bashrc
 #   Windows (PowerShell):    setx ELEVENLABS_API_KEY "sk_..."
 
@@ -115,13 +115,13 @@ key is found it falls back to the on-device engine automatically** (install
 echo 'ELEVENLABS_API_KEY=sk_your_key_here' > my-demo/.env
 ```
 
-A globally-installed `pocu` (see below) runs in its own venv but still inherits
+A globally-installed `pocyeah` (see below) runs in its own venv but still inherits
 your shell environment, so the shell-profile export reaches it with no extra
-setup. Pick a voice/model in the demo's `[tts]` block (see `pocu explain`).
+setup. Pick a voice/model in the demo's `[tts]` block (see `pocyeah explain`).
 
-### Install globally (run `pocu` anywhere)
+### Install globally (run `pocyeah` anywhere)
 
-Use uv's tool installer (the pipx equivalent) to put both `pocu` and
+Use uv's tool installer (the pipx equivalent) to put both `pocyeah` and
 `pocyeah` on your PATH, in an isolated environment:
 
 ```bash
@@ -134,7 +134,7 @@ uv tool install --editable .
 # your shell profile — see "Narration credentials" above; the global tool inherits it.
 uv tool install --editable . --with pyte --with pillow --with elevenlabs --with piper-tts
 
-pocu --help                 # now works from any directory
+pocyeah --help                 # now works from any directory
 ```
 
 The executables land in `~/.local/bin` (run `uv tool update-shell` once if that
@@ -154,7 +154,7 @@ PocYeah is built around a cheap inner loop and one expensive step:
 4. **`record`** is the one expensive step: run each pane in a pseudo-terminal,
    tile and render the terminals to frames, encode them with ffmpeg, and write
    `recording.mov` plus a `recording.mov.timeline.json` sidecar mapping each event
-   to its video offset. (Preview the tiling first, instantly, with `pocu layout`.)
+   to its video offset. (Preview the tiling first, instantly, with `pocyeah layout`.)
    Add **`--split`** to render each pane to its **own** independent video
    (`recording-1-<title>.mov`, …) — detachable windows you can place anywhere on a
    monitor — instead of one composite. Prefer stacked over a wide strip? Set
@@ -165,7 +165,7 @@ PocYeah is built around a cheap inner loop and one expensive step:
 
 ## The `demo.toml`
 
-Run `pocu explain` for the authoritative, always-current reference. In brief:
+Run `pocyeah explain` for the authoritative, always-current reference. In brief:
 
 ```toml
 [recording]                 # all optional
@@ -233,14 +233,14 @@ one expensive `record`, then re-run `annotate`/`narrate`, plus the sharp edges
 - **In this repo:** nothing to install. Claude Code auto-discovers project skills
   under `.claude/skills/`, so an agent working here loads it when it's relevant;
   you can also invoke it explicitly with `/using-pocyeah`.
-- **Anywhere (a global install of `pocu`, driving demos in other repos):** copy
+- **Anywhere (a global install of `pocyeah`, driving demos in other repos):** copy
   the skill into your personal skills directory so it travels with you:
 
   ```bash
   cp -r .claude/skills/using-pocyeah ~/.claude/skills/
   ```
 
-It's a reference skill — reading it (or `pocu explain`) is meant to replace
+It's a reference skill — reading it (or `pocyeah explain`) is meant to replace
 digging through `src/` to figure out how to drive the tool.
 
 ## Architecture
