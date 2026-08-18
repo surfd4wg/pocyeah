@@ -2,17 +2,6 @@
   <img src="docs/pocyeah_logo.png" alt="PocYeah" width="640">
 </p>
 
-<p align="center">
-  <a href="https://pillar.security">
-    <picture>
-      <source media="(prefers-color-scheme: dark)" srcset="docs/pillar-logo-light.svg">
-      <img src="docs/pillar-logo.svg" alt="Pillar Security" height="26">
-    </picture>
-  </a>
-  <br>
-  <sub>An open-source project from <a href="https://pillar.security">Pillar Security</a></sub>
-</p>
-
 # PocYeah
 
 **Turn a proof-of-concept into a narrated screen-recording — from one declarative spec, repeatably. On Linux, Windows, and macOS.**
